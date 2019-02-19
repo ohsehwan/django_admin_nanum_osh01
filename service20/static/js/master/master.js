@@ -392,6 +392,9 @@ function fnAdminSearch(){
 	p = document.location.pathname;
 	
 	var params = jQuery("#searchForm").serializeArray();
+
+	
+	
 	str = "";
     jQuery.each( params, function( i, field ) {
 

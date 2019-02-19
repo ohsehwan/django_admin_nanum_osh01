@@ -62,44 +62,50 @@
 
 		$(document).ready(function() {
 		        $.ajax({
-		            url:'/service20/comboMpmgListView/',
+		            url:'/service20/msComboListView/',
 		            type:'GET',
 		            dataType: 'json',
 		            success: function(data){
 						if(data.length > 0){
 							$.each(data, function(key, value){
-								$("#s4").append("<option value='" + value.ms_id + "'>" + value.ms_name + "</option> ");
+
+								$("#s4").append("<option value='" + value.ms_id + "'>" + value.ms_name + "-"+ value.ms_id+"</option> ");
 							});
-							var vl_s4 = '{{request.GET.ms_id_id}}';
+							var vl_s4 = '{{request.GET.ms_id}}';
 		       				$("#s4").val(vl_s4); 
+		       				comboGetVal(vl_s4);
 						}            	
 		            }// end
-
-
 		        });// end ajax
-
-
-		        return false;
-
-
-
 		});
 
         function comboGetVal(val){
         	vl_ms_id = $("#s4").val();
-        	alert(vl_ms_id);
-			var form_data = "ms_id_id="+vl_ms_id;
-			$.ajax({  
+
+        	if(vl_ms_id==""){
+        		return;
+        	}
+
+			var form_data = "ms_id="+vl_ms_id;
+
+			$.ajax({	  
 			  type: "GET", 
-			  url:'/service20/msFn1/',
+			  url:'/service20/msComboListViewDetail/',
 			  data:  form_data, //&a=xxx 식으로 뒤에 더 붙이면 됨
 			  
 			  success: function(data) {
-			  		alert(data);
+
 					if(data.length > 0){
 						$.each(data, function(key, value){
+
 							$("#c1").html(value.ms_name);
-							
+							$("#c2").html(value.apl_fr_dt + "~" + value.apl_to_dt);
+							$("#c3").html(value.trn_fr_dt + "~" + value.trn_to_dt);
+							$("#c4").html(value.status);
+							$("#c5").html(value.tot_apl);
+							$("#c6").html(value.cnt_apl);
+
+
 						});
 					}      			  	
 			  	//alert(JSON.stringify(response));
@@ -115,25 +121,30 @@
 </script>
 
 <script>
+    vlKey1 = "";
+	form_data = "";
+	function getFindData(){
+
+	    vlKey1 = $("#s4").val();
+		form_data = "ms_id="+vlKey1;
+
+	}
+
 	function fn01(){
 
 		if (confirm('환산하시겠습니까?')) {
 		    // Save it!
-		   	location.reload();
-
-
-			var form_data = "ms_id="+val.value;
+		    getFindData();
 			$.ajax({  
 			  type: "GET", 
 			  url:'/service20/msFn1/',
 			  data:  form_data, //&a=xxx 식으로 뒤에 더 붙이면 됨
 			  
 			  success: function(data) {
-					if(data.length > 0){
-						$.each(data, function(key, value){
-							$("#c1").html(value.ms_name);
-							
-						});
+
+			
+					if(data){
+						location.reload();
 					}      			  	
 			  	//alert(JSON.stringify(response));
 			  	//alert(JSON.stringify(response.ms_id));
@@ -152,39 +163,61 @@
 	}
 
 	function fn02(){
-
 		if (confirm('사정하시겠습니까?')) {
 		    // Save it!
-		    location.reload();
-
-			var form_data = "ms_id="+val.value;
+		    
+		    getFindData();
 			$.ajax({  
 			  type: "GET", 
-			  url:'/service20/msFn1/',
+			  url:'/service20/msFn2/',
 			  data:  form_data, //&a=xxx 식으로 뒤에 더 붙이면 됨
 			  
 			  success: function(data) {
-					if(data.length > 0){
-						$.each(data, function(key, value){
-							$("#c1").html(value.ms_name);
-							
-						});
-					}      			  	
+					if(data){
+						location.reload();
+					}      		  	
 			  	//alert(JSON.stringify(response));
 			  	//alert(JSON.stringify(response.ms_id));
 					
 			  },
 			  error: function(err) {
 			  		alert("Error");
-
 			  }
 			}); 
-
 		} else {
-		    // Do nothing!
 		}
-
 	}	
+
+	function fn03(){
+		if (confirm('엑셀다운로드 하시겠습니까?')) {
+		    // Save it!
+		  	
+		    location.href = '/service20/mpFn3/';
+
+		  	return;
+		    var vlKey1 = $("#s4").val();
+			var form_data = "mp_id="+vlKey1;
+			$.ajax({  
+			  type: "GET", 
+			  url:'/service20/msFn3/',
+			  data:  form_data, //&a=xxx 식으로 뒤에 더 붙이면 됨
+			  
+			  success: function(data) {
+					if(data){
+						//location.reload();
+					}      		  	
+			  	//alert(JSON.stringify(response));
+			  	//alert(JSON.stringify(response.ms_id));
+					
+			  },
+			  error: function(err) {
+			  		alert("Error");
+			  }
+			}); 
+		} else {
+		}
+	}		
+
 </script>
 
 <div class="container body">
@@ -253,7 +286,7 @@
 								<div class="form-group col-md-4 col-sm-4 col-xs-6">
 									<label class="control-label col-md-4 col-sm-4 col-xs-12">멘토스쿨</label>
 									<div class="col-md-8 col-sm-8 col-xs-12">
-										<select name="ms_id_id" id="s4" class="form-control input-sm" onchange="comboGetVal(this)">
+										<select name="ms_id" id="s4" class="form-control input-sm" onchange="comboGetVal(this)">
 											<option value="">멘토스쿨</option>
 										</select>
 									</div>
@@ -293,12 +326,7 @@
 												<td>
 													지원
 												</td>	
-												<td>
-													등록일
-												</td>	
-												<td>
-													등록자
-												</td>																																																																								
+																																																																							
 											</tr>
 											<tr>
 												<td>
@@ -319,13 +347,6 @@
 												<td>
 													<span id="c6"></span>
 												</td>
-												<td>
-													<span id="c7"></span>
-												</td>
-												<td>
-													<span id="c8"></span>
-												</td>												
-
 											</tr>
 											</table>
 									</div>

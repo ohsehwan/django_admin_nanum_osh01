@@ -1,0 +1,212 @@
+<!DOCTYPE html">
+<html lang="ko">
+
+<head> 
+
+<!--언어 타입-->
+<meta content="text/html" charset="utf-8"> 
+
+<!-- CSS -->
+<link href="http://sgd122.cafe24.com/popup/css/default.css" rel="stylesheet" />
+<link href="http://sgd122.cafe24.com/popup/css/style.css" rel="stylesheet" />
+<link href="http://sgd122.cafe24.com/popup/css/slick.css" rel="stylesheet" type="text/css" >
+<link href="http://sgd122.cafe24.com/popup/css/slick-theme.css" rel="stylesheet" type="text/css" >
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">               
+			   
+<!-- 제이쿼리 -->
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="http://sgd122.cafe24.com/popup/js/slick.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>   <!-- js 및 css Include(필수) -->
+<script type="text/javascript">
+var v_id = getParameterByName("id");//멘토스쿨 id	
+
+$( document ).ready(function() {
+	if(isNull(v_id)){ alert("잘못된 접근입니다."); window.location.href = "/sub/MentoProgramList.html"; }
+	var form_data = {
+		"user_id": sessionStorage.getItem('user_id'),
+		"ms_id": v_id,
+		"yr":localStorage.getItem('v_yr')
+	};
+	var form_data_que = {
+		"ms_id": v_id
+	};
+	v_data = find("service20/authUserInfo/",form_data,"post");
+	v_data_que = find("service20/authUserInfoQuest/",form_data_que);
+	$("#programID").val(v_id);//프로그램ID
+	console.log(v_data);
+	if($.trim(v_data).length < 1){
+		
+	}else{
+		if(v_data.applyYn == "Y"){
+				
+			add("mentoWrite","mentoWriteHeader01",v_data);
+			add("mentoWrite","mentoWriteHeader02",v_data);
+			add("mentoWrite","mentoWriteHeader03",v_data);
+			add("mentoWrite","mentoWrite",v_data_que);
+
+			//텍스트
+			$("#mentoSchoolTitle").html("<b>"+v_data.ms_name+"</b> 신청하기");
+		}
+	}
+});	
+</script>
+</head>
+
+<body>
+<div id="admin_cont">
+	<div class="top">
+		<div class="map"><img src="../img/admin_nav.png">HOME / 멘토스쿨 신청하기</div> <!-- map -->
+		<h2>멘토스쿨 신청하기</h2>
+	</div> <!-- top -->
+	<div class="content">
+		<div class="baseline">
+			<h4><i class="fa fa-id-badge" aria-hidden="true"></i> 기본정보</h4>
+			<ul>
+				<li><p>학번</p><input type="text" value="20165678"></li>
+				<li><p>성명</p><input type="text" value="라가나"></li>
+				<li><p>성별</p><input type="text" value="여"></li>
+				<li><p>학교</p><input type="text" value="부산대학교"></li>
+				<li><p>대학</p><input type="text" value="사범대학"></li>
+				<li><p>학과</p><input type="text" value="국어교육학과"></li>
+				<li><p>학년</p><input type="text" value="2학년"></li>
+			</ul>
+		</div> <!-- baseline -->
+		<div class="application">
+			<h4><i class="fa fa-user-circle-o" aria-hidden="true"></i> 2018 멘토스쿨 3차 서류 전형 현황</h4>
+			<div class="standard">
+				<h5><i class="fa fa-clone" aria-hidden="true"></i> 서류 전형 기준</h5>
+				<ul>
+					<li><p>성적 (20)</p><input type="text" value="12"></li>
+					<li><p>봉사 (10)</p><input type="text" value="6"></li>
+					<li><p>외국어 (10)</p><input type="text" value="8"></li>
+					<li><p>지원서 (10) </p><input type="text" value="7.33"></li>
+					<li><p>총점 (50)</p><input type="text" value="33.33"></li>
+					<li><p>결과</p><input type="text" value="합격"></li>
+					<li><p>등수</p><input type="text" value="3"></li>					
+				</ul>
+			</div> <!-- standard -->
+			<div class="grade">
+				<h5><i class="fa fa-clone" aria-hidden="true"></i> 성적</h5>
+				<div class="wrap">
+					<p>16</p>
+					<input type="text" value="직전학기">
+					<input type="text" value="2학년1학기">
+					<input type="text" value="27">
+					<input type="text" value="63">
+					<input type="text" value="43%">
+				</div>
+			</div> <!-- grade -->
+			<div class="volunteer">
+				<h5><i class="fa fa-clone" aria-hidden="true"></i> 봉사</h5>
+				<div class="wrap">
+					<p>6</p>
+					<input type="text" value="36">
+				</div>
+			</div> <!-- volunteer -->
+			<div class="language">
+				<h5><i class="fa fa-clone" aria-hidden="true"></i> 어학</h5>
+				<div class="wrap">
+					<p>8</p>
+					<input type="text" value="TOEIC">
+					<input type="text" value="850">
+				</div>
+			</div> <!-- language -->
+			<div class="question">
+				<h5><i class="fa fa-clone" aria-hidden="true"></i> 질문</h5>
+				<div class="wrap">
+					<ul>
+						<li>
+							<p>01.질문1에 대해 답변부탁합니다.</p>
+							<input type="text" value="네">
+						</li>
+						<li>
+							<p>02.신청 단위(개인/그룹 선택)</p>
+							<input type="text" value="개인">
+						</li>
+						<li>
+							<p>03.희망 검사종류?</p>
+							<input type="text" value="MLST">
+						</li>
+						<li>
+							<p>04.개인전화번호?</p>
+							<input type="text" value="010-528-1004">
+						</li>
+						<li>
+							<p>05.e-Mail 주소</p>
+							<input type="text" value="ad@cd.ef">
+						</li>
+					</ul>
+				</div>
+			</div> <!-- question -->
+			<div class="total">
+				<h5><i class="fa fa-clone" aria-hidden="true"></i> 채점</h5>
+				<div class="wrap">
+					<ul>
+						<li class="tit">
+							<span class="step01">항목</span>
+							<span class="step02">평균</span>
+							<span class="step03">총점</span>
+							<span class="step04">박상준</span>
+							<span class="step05">이선진</span>
+							<span class="step06">임저장</span>
+						</li>
+						<li>
+							<span class="step01">성격</span>
+							<span class="step02"><input type="text" value="1.67"></span>
+							<span class="step03"><input type="text" value="5"></span>
+							<span class="step04"><input type="text" value="1"></span>
+							<span class="step05"><input type="text" value="2"></span>
+							<span class="step06"><input type="text" value="2"></span>
+						</li>
+						<li>
+							<span class="step01">동기</span>
+							<span class="step02"><input type="text" value="1.67"></span>
+							<span class="step03"><input type="text" value="5"></span>
+							<span class="step04"><input type="text" value="1"></span>
+							<span class="step05"><input type="text" value="2"></span>
+							<span class="step06"><input type="text" value="2"></span>
+						</li>
+						<li>
+							<span class="step01">목적</span>
+							<span class="step02"><input type="text" value="1.67"></span>
+							<span class="step03"><input type="text" value="5"></span>
+							<span class="step04"><input type="text" value="1"></span>
+							<span class="step05"><input type="text" value="2"></span>
+							<span class="step06"><input type="text" value="2"></span>
+						</li>
+						<li>
+							<span class="step01">경력</span>
+							<span class="step02"><input type="text" value="1.67"></span>
+							<span class="step03"><input type="text" value="5"></span>
+							<span class="step04"><input type="text" value="1"></span>
+							<span class="step05"><input type="text" value="2"></span>
+							<span class="step06"><input type="text" value="2"></span>
+						</li>
+						<li>
+							<span class="step01">문장</span>
+							<span class="step02"><input type="text" value="1.67"></span>
+							<span class="step03"><input type="text" value="5"></span>
+							<span class="step04"><input type="text" value="1"></span>
+							<span class="step05"><input type="text" value="2"></span>
+							<span class="step06"><input type="text" value="2"></span>
+						</li>
+						<li class="total">
+							<span class="step01">총점</span>
+							<span class="step02"><input type="text" value="7.33"></span>
+							<span class="step03"><input type="text" value="22"></span>
+							<span class="step04"><input type="text" value="6"></span>
+							<span class="step05"><input type="text" value="7"></span>
+							<span class="step06"><input type="text" value="8"></span>
+						</li>
+					</ul>
+			</div> <!-- total -->
+		</div> <!-- application -->
+	</div> <!-- content -->
+	<div class="btn">
+		<a href="#none"><i class="fa fa-pencil" aria-hidden="true"></i> 저장</a>
+	</div>
+</div> <!-- admin_cont -->
+
+</body>
+</html>

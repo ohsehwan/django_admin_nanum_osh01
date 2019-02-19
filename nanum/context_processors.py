@@ -42,18 +42,9 @@ def gnb_menus(request):
             'name': '멘토스쿨',
             'sub_menus': [
                 {'name': '멘토스쿨관리', 'url': '/admin/service20/msch/'},
-
-               
-                #{'name': '멘토스쿨설정', 
-                #'sub_menus2': [
-                #        {'name': '학년관리', 'url': '/admin/service20/msch/'},
-                #    ]
-                #},
-
-
                 {'name': '멘토스쿨설정', 'url': '/admin/service20/ms_sub/'},
                 {'name': '멘토스쿨전형', 'url': '/admin/service20/ms_apl'},
-                {'name': '멘토링프로그램', 'url': '/admin/service20/mpgm'},
+                
                 {'name': '프로그램속성', 'url': '/admin/service20/mp_sub'},
                 {'name': '지원자답변', 'url': '/admin/service20/ms_ans'},
                 {'name': '지원서채점', 'url': '/admin/service20/ms_mrk'},
@@ -64,7 +55,17 @@ def gnb_menus(request):
                 
              
             ]
-        },        
+        },   
+
+        {
+            'name': '멘토링',
+            'sub_menus': [
+                {'name': '멘토링프로그램', 'url': '/admin/service20/mpgm'},
+                {'name': '멘토링전형', 'url': '/admin/service20/mp_mtr'},             
+            ]
+        },
+
+
         {
             'name': '회원',
             'sub_menus': [

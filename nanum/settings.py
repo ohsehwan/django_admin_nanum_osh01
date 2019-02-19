@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ckeditor',
     'rest_framework',
+    'import_export',
     'member',
     'post',
     'polls',
@@ -123,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+IMPORT_EXPORT_USE_TRANSACTIONS = True
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 

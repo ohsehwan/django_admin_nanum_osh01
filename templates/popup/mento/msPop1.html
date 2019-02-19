@@ -1,0 +1,341 @@
+{% load static %} 
+
+<!DOCTYPE html">
+<html lang="ko">
+
+<head> 
+
+<!--언어 타asdfasfdadsf입-->
+<meta content="text/html" charset="utf-8"> 
+
+
+<!-- CSS -->
+<link href="http://sgd122.cafe24.com/popup/css/default.css" rel="stylesheet" />
+<link href="{% static 'css/style.css' %}" rel="stylesheet" />
+<link href="{% static 'css/slick-theme.css' %}" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">      
+
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery-migrate-1.1.1.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/Service.js' %}"></script>
+
+<script type="text/javascript">
+var v_id = '{{request.GET.ms_id}}';
+var v_apl_id = '{{request.GET.apl_id}}';
+
+var v_yr = '{{request.GET.yr}}';
+
+
+$( document ).ready(function() {
+
+	if(isNull(v_id)){ alert("잘못된 접근입니다."); window.location.href = "/sub/MentoProgramList.html"; }
+
+
+
+
+	var form_data = {
+		"ms_id": v_id,
+		"apl_id": v_apl_id
+	};
+	var form_data_que = {
+		"ms_id": v_id,
+		"user_id": v_apl_id
+	};
+
+
+	v_data1 = find("service20/msPop1_Det1/",form_data);
+
+	$("#memberNo").val(v_data1[0].apl_id);
+	$("#name").val(v_data1[0].apl_nm);
+	$("#gen").val(v_data1[0].gen);
+	$("#school").val("부산대학교");
+	$("#univNm").val(v_data1[0].univNm);
+	$("#dept_nm").val(v_data1[0].dept_nm);
+	$("#yr").val(v_data1[0].sch_yr);
+
+	v_data2 = find("service20/msPop1_Det1/",form_data);
+
+	$("#H2Col01").val(v_data2[0].cscore1);
+	$("#H2Col02").val(v_data2[0].cscore2);
+	$("#H2Col03").val(v_data2[0].cscore3);
+	$("#H2Col04").val(v_data2[0].cscore4);
+	$("#H2Col05").val(v_data2[0].tot_doc);
+	$("#H2Col06").val(v_data2[0].doc_rslt);
+	$("#H2Col07").val(v_data2[0].doc_rank);
+
+
+	
+	v_data3 = find("service20/msPop1_Det2/",form_data);
+
+	l_H3_1 = v_data2[0].cscore1;
+	l_H3_2 = v_data3.pr_term_div;
+	l_H3_3 = ((v_data3.score01/v_data3.score02)*100).toFixed(0);
+
+	if(l_H3_2=='10'){
+		l_H3_2 = '1학기';
+	}else{
+		l_H3_2 = '2학기';
+	}
+
+	if(l_H3_1== null || l_H3_1 == "NULL"){
+		l_H3_1 = "&nbsp;";
+	}
+	$("#H3Col00").html(l_H3_1);	
+	$("#H3Col02").val(v_data3.pr_sch_yr + "학년 " + l_H3_2);
+	$("#H3Col03").val(v_data3.score01);
+	$("#H3Col04").val(v_data3.score02);
+	$("#H3Col05").val(l_H3_3);
+
+	l_H4_1 = v_data2[0].cscore2;
+	if(l_H4_1== null || l_H4_1 == "NULL"){
+		l_H4_1 = "33";
+	}	
+
+	$("#H4Col00").html(l_H4_1);
+	$("#H4Col01").val(v_data3.score03);
+
+
+	l_H5_1 = v_data2[0].cscore3;
+	if(l_H5_1== null || l_H5_1 == "NULL"){
+		l_H5_1 = "&nbsp;";
+	}		
+	$("#H5Col00").html(l_H5_1);
+
+	
+
+	v_data_que = find("service20/MP0101M/admin/quest/",form_data_que);
+	v_data = v_data_que;
+	v_id = "mentoWrite";
+	$("#mentoWrite").empty();
+	for(var i=0;i<v_data.length;i++){				
+		var li_text = "";
+		// li_text += '<li><span>'+v_data[i].std_detl_code_nm+' : '+v_data[i].rmrk+'</span>	<textarea class="mentoSchoolTextArea" cols="40" rows="8" name="que'+(i+1)+'"	id="que'+(i+1)+'"> </textarea></li>';
+
+		li_text += '<li>';
+		li_text += '<p>'+v_data[i].std_detl_code_nm+'. '+v_data[i].rmrk+'에 대해 답변부탁합니다.</p>';
+		li_text += '<input type="text" '+v_readonly+' value="'+v_data[i].ans_t2+'">';
+		li_text += '</li>';
+
+		$("#"+v_id).append(li_text);  
+	}	
+
+
+
+	//채점자 교수 조회
+	v_data_MS0016 = find("service20/msPop1_Det3/",form_data);
+	for(var i=0;i<v_data_MS0016.length;i++){				
+		var li_text = "";
+		// li_text += '<li><span>'+v_data[i].std_detl_code_nm+' : '+v_data[i].rmrk+'</span>	<textarea class="mentoSchoolTextArea" cols="40" rows="8" name="que'+(i+1)+'"	id="que'+(i+1)+'"> </textarea></li>';
+
+		li_text += '<span class="step04">'+v_data_MS0016[i].att_val+'</span>';
+
+		$("#mentoWriteHeaderTot_Det1").append(li_text);  
+	}	
+
+	//채점문항
+	v_data_MS0015 = find("service20/msPop1_Det4/",form_data);
+
+	for(var i=0;i<v_data_MS0015.length;i++){				
+		var li_text = "";
+		// li_text += '<li><span>'+v_data[i].std_detl_code_nm+' : '+v_data[i].rmrk+'</span>	<textarea class="mentoSchoolTextArea" cols="40" rows="8" name="que'+(i+1)+'"	id="que'+(i+1)+'"> </textarea></li>';
+		li_text = "<li>";
+		li_text += '<span class="step01">'+v_data_MS0015[i].nm+'</span>';
+		li_text += '<span class="step02"><input type="text" value="1.67"></span>';
+		li_text += '<span class="step02"><input type="text" value="1.67"></span>';
+		
+		for(var j=0;j<v_data_MS0016.length;j++){	
+			li_text += '<span class="step02"><input type="text" value="1.67"></span>';
+		}
+
+		li_text += "</li>";
+
+		$("#mentoWriteHeaderTot_Det2").append(li_text);  
+	}	
+
+
+
+
+	alert(v_data_MS0015);
+
+
+
+						
+
+
+
+	//$("#H5Col00").html(l_H5_1);
+		 //alert(JSON.stringify(v_data));
+		//alert(JSON.stringify(v_data[0].ms_id));
+	$("#programID").val(v_id);//프로그램ID
+
+		console.log(v_data);
+		console.log(v_data_que);
+
+	if($.trim(v_data).length < 1){
+		
+	}else{
+		// if(v_data.applyYn == "Y"){
+			//add("admin_mentoProgramView","mentoWriteHeader01",v_data);		// 기본정보
+			//add("admin_mentoProgramView","mentoWriteHeader02",v_data);				
+			//add("admin_mentoProgramView","mentoWriteHeader03",v_data);f
+			//add("admin_mentoProgramView","mentoWriteHeader04",v_data);
+			//add("admin_mentoProgramView","mentoWriteHeader05",v_data);
+			//add("admin_mentoProgramView","mentoWrite",v_data_que);
+			// add("admin_mentoProgramView","mentoWriteHeaderTot",v_data);
+
+			//텍스트
+			$("#mentoProgramTitle").html('<i class="fa fa-user-circle-o" aria-hidden="true"></i> '+v_data[0].ms_name+' 서류 전형 현황');
+		// }
+	}
+});	
+</script>
+
+
+</head>
+
+<body>
+<div id="admin_cont">
+
+	<div class="content">
+		<div class="baseline">
+			<h4><i class="fa fa-id-badge" aria-hidden="true"></i> 기본정보</h4>
+			<ul id="mentoWriteHeader01">
+				<li><p>학번</p><input type="text" name="memberNo" 	id="memberNo" 	value=""></li>
+				<li><p>성명</p><input type="text" name="name" 		id="name" 	 	value=""></li>
+				<li><p>성별</p><input type="text" name="gen" 			id="gen" 	 	value=""></li>
+				<li><p>학교</p><input type="text" name="school"		id="school"	 	value=""></li>
+				<li><p>대학</p><input type="text" name="univNm"		id="univNm"	 	value=""></li>
+				<li><p>학과</p><input type="text" name="dept_nm"		id="dept_nm"	value=""></li>
+				<li><p>학년</p><input type="text" name="yr"			id="yr"			value=""></li>
+			</ul>
+		</div> <!-- baseline -->
+		<div class="application">
+			<h4 id="mentoSchoolTitle"><i class="fa fa-user-circle-o" aria-hidden="true"></i> 멘토스쿨 서류 전형 현황</h4>
+			<div class="standard">
+				<h5><i class="fa fa-clone" aria-hidden="true"></i> 서류 전형 기준</h5>
+
+
+				<ul id="mentoWriteHeader02">
+					<li><p>성적 (20)</p>	   <input type="text"  id="H2Col01" value=""></li>
+					<li><p>봉사 (10)</p>		<input type="text" id="H2Col02" value=""></li>
+					<li><p>외국어 (10)</p>		<input type="text" id="H2Col03" value=""></li>
+					<li><p>지원서 (10) </p>		<input type="text" id="H2Col04" value=""></li>
+					<li><p>총점 (50)</p>		<input type="text" id="H2Col05" value=""></li>
+					<li><p>결과</p>				<input type="text" id="H2Col06" value=""></li>
+					<li><p>등수</p>				<input type="text" id="H2Col07" value=""></li>				
+				</ul>
+
+
+			</div> <!-- standard -->
+			<div class="grade">
+				<h5><i class="fa fa-clone" aria-hidden="true"></i> 성적</h5>
+				<div class="wrap" id="mentoWriteHeader03">
+					<p id="H3Col00"></p>
+					<input type="text" id="H3Col01"	name="scoreEdit1"	value="직전학기">
+					<input type="text" id="H3Col02"	name="scoreEdit2"	value="">
+					<input type="text" id="H3Col03"		name="score1"		value="">
+					<input type="text" id="H3Col04"		name="score2"		value="">
+					<input type="text" id="H3Col05"	name="scoreTot"		value="">
+				</div>
+			</div> <!-- grade -->
+			<div class="volunteer">
+				<h5><i class="fa fa-clone" aria-hidden="true"></i> 봉사</h5>
+				<div class="wrap" id="mentoWriteHeader04">
+					<p id="H4Col00"></p>
+					<input type="text" id="H4Col01"		name="score3"		value="">
+
+				</div>
+			</div> <!-- volunteer -->
+			<div class="language">
+				<h5><i class="fa fa-clone" aria-hidden="true"></i> 어학</h5>
+				<div class="wrap" id="mentoWriteHeader05">
+					<p id="H5Col00"></p>
+					<input type="text" id="H5Col01"	name="scoreEdit3"	value="TOEIC">
+					<input type="text" id="H5Col02"		name="score4"		value="">
+				</div>
+			</div> <!-- language -->
+			<div class="question">
+				<h5><i class="fa fa-clone" aria-hidden="true"></i> 질문</h5>
+				<div class="wrap" id="mentoWrite">
+
+				</div>
+			</div> <!-- question -->
+			<div class="total">
+				<h5><i class="fa fa-clone" aria-hidden="true"></i> 채점</h5>
+				<div class="wrap" id="mentoWriteHeaderTot">
+					<ul>
+						<li class="tit">
+							<span class="step01">항목</span>
+							<span class="step02">평균</span>
+							<span class="step03">총점</span>
+							<div class="wrap" id="mentoWriteHeaderTot_Det1">
+							</div>
+						</li>
+						<div class="wrap" id="mentoWriteHeaderTot_Det2">
+						</div>						
+						<!--
+						<li>
+							<span class="step01">성격</span>
+							<span class="step02"><input type="text" value="1.67"></span>
+							<span class="step03"><input type="text" value="5"></span>
+							<span class="step04"><input type="text" value="1"></span>
+							<span class="step05"><input type="text" value="2"></span>
+							<span class="step06"><input type="text" value="2"></span>
+						</li>
+						<li>
+							<span class="step01">동기</span>
+							<span class="step02"><input type="text" value="1.67"></span>
+							<span class="step03"><input type="text" value="5"></span>
+							<span class="step04"><input type="text" value="1"></span>
+							<span class="step05"><input type="text" value="2"></span>
+							<span class="step06"><input type="text" value="2"></span>
+						</li>
+						<li>
+							<span class="step01">목적</span>
+							<span class="step02"><input type="text" value="1.67"></span>
+							<span class="step03"><input type="text" value="5"></span>
+							<span class="step04"><input type="text" value="1"></span>
+							<span class="step05"><input type="text" value="2"></span>
+							<span class="step06"><input type="text" value="2"></span>
+						</li>
+						<li>
+							<span class="step01">경력</span>
+							<span class="step02"><input type="text" value="1.67"></span>
+							<span class="step03"><input type="text" value="5"></span>
+							<span class="step04"><input type="text" value="1"></span>
+							<span class="step05"><input type="text" value="2"></span>
+							<span class="step06"><input type="text" value="2"></span>
+						</li>
+						<li>
+							<span class="step01">문장</span>
+							<span class="step02"><input type="text" value="1.67"></span>
+							<span class="step03"><input type="text" value="5"></span>
+							<span class="step04"><input type="text" value="1"></span>
+							<span class="step05"><input type="text" value="2"></span>
+							<span class="step06"><input type="text" value="2"></span>
+						</li>
+						<li class="total">
+							<span class="step01">총점</span>
+							<span class="step02"><input type="text" value="7.33"></span>
+							<span class="step03"><input type="text" value="22"></span>
+							<span class="step04"><input type="text" value="6"></span>
+							<span class="step05"><input type="text" value="7"></span>
+							<span class="step06"><input type="text" value="8"></span>
+						</li>
+						-->
+					</ul>
+			</div> <!-- total -->
+		</div> <!-- application -->
+	</div> <!-- content -->
+	<div class="btn">
+		<a href="#none"><i class="fa fa-pencil" aria-hidden="true"></i> 저장</a>
+	</div>
+</div> <!-- admin_cont -->
+
+</body>
+
+
+</html>
+
